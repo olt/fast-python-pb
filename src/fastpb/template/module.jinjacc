@@ -265,6 +265,20 @@ fastpb_convert{{ TYPE.ENUM }}(int value)
                           "The {{ member.name }} attribute value must be an integer");
           return -1;
         }
+        
+      {% elif member.type == TYPE.UINT32 %}
+        ::google::protobuf::uint32 protoValue;
+
+        // uint32
+        if (PyInt_Check(value)) {
+          protoValue = PyInt_AsUnsignedLongMask(value);
+        } else if (PyLong_Check(value)) {
+          protoValue = PyLong_AsUnsignedLong(value);
+        } else {
+          PyErr_SetString(PyExc_TypeError,
+                          "The {{ member.name }} attribute value must be an integer");
+          return -1;
+        }
 
       {% elif member.type == TYPE.ENUM %}
         // {{ member.type_name }}
